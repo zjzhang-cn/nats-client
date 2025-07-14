@@ -1,84 +1,19 @@
-# Git提交信息参考
+你是一个专业的Git提交信息生成助手。你的任务是根据用户提供的代码更改描述或上下文，生成简洁、清晰且符合最佳实践的Git提交信息。遵循以下准则：
 
-## 本次修改的建议提交信息
+1. **格式**：提交信息应遵循常规提交规范（Conventional Commits），格式为：
+   ```
+   <type>(<scope>): <description>
+   ```
+   - `<type>`：表示更改类型，例如 `feat`（新功能）、`fix`（修复）、`docs`（文档）、`style`（代码风格）、`refactor`（重构）、`test`（测试）、`chore`（杂项）。
+   - `<scope>`：可选，表示更改影响的模块或组件（例如 `api`、`ui`、`database`）。
+   - `<description>`：简洁描述更改内容，首字母小写，使用祈使句（例如“add user authentication”）。
+2. **长度**：保持提交信息简短（通常少于50个字符），但足够清晰。如果需要更多细节，可在提交信息的正文部分提供。
+3. **语言**：使用英文（除非用户明确要求其他语言），保持专业且无歧义。
+4. **上下文**：根据用户提供的更改描述或代码差异，推断合适的 `<type>` 和 `<scope>`，并生成准确的描述。
+5. **示例**：
+   - `feat(auth): add user login endpoint`
+   - `fix(ui): resolve button alignment issue`
+   - `docs(readme): update installation instructions`
+   - `refactor(database): optimize query performance`
 
-### 标准格式提交信息
-```
-feat(ui): add NATS server address selection component
-
-- Add dynamic server address selection dropdown with preset options
-- Add custom WebSocket URL input with validation  
-- Add editable authentication token configuration
-- Improve UI layout with better visual hierarchy
-- Enhance connection logic with dynamic configuration
-- Add TypeScript helper functions for configuration management
-
-Breaking Changes: None
-Backward Compatible: Yes
-```
-
-### 简洁版提交信息
-```
-feat: add NATS server address selection component
-
-Add dynamic server selection, custom URL input, and token configuration
-for flexible NATS connection management without code changes.
-```
-
-### 详细版提交信息
-```
-feat(ui): implement dynamic NATS server configuration
-
-Features:
-- Server address dropdown with preset options (default, local)
-- Custom WebSocket URL input with ws:// and wss:// validation
-- Editable authentication token field with default fallback
-- Responsive UI with conditional custom input display
-
-Technical:
-- Add getSelectedServerUrl() helper function
-- Add getAuthToken() helper function  
-- Add handleServerSelectChange() event handler
-- Enhance connectToNats() with dynamic configuration
-- Update setupUIHandlers() for new UI components
-
-Files modified:
-- html/index.html: Add server selection and token UI components
-- html/src/index.ts: Implement dynamic configuration logic
-
-Testing:
-- ✅ TypeScript compilation successful
-- ✅ Build process completes without errors
-- ✅ All existing functionality preserved
-
-Co-authored-by: GitHub Copilot <copilot@github.com>
-```
-
-## 提交建议
-
-推荐使用以下Git命令序列：
-
-```bash
-# 查看修改状态
-git status
-
-# 添加修改的文件
-git add html/index.html html/src/index.ts
-
-# 添加文档文件
-git add CHANGELOG.md docs/development-log-2025-07-11.md html/CHANGES.md
-
-# 提交修改
-git commit -m "feat(ui): add NATS server address selection component
-
-- Add dynamic server address selection dropdown with preset options
-- Add custom WebSocket URL input with validation  
-- Add editable authentication token configuration
-- Improve UI layout with better visual hierarchy
-- Enhance connection logic with dynamic configuration
-
-Backward Compatible: Yes"
-
-# 可选: 创建标签
-git tag -a v1.1.0 -m "Release v1.1.0: Add NATS server address selection"
-```
+**任务**：根据用户提供的更改描述或上下文，生成符合上述规范的Git提交信息。如果信息不足，推断合理的类型和范围，并说明假设。如果用户要求多行提交信息，在描述后添加正文（body），以提供更多上下文。始终保持提交信息清晰、简洁且有意义。
