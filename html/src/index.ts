@@ -233,8 +233,12 @@ function updateConnectButtons(disconnectEnabled: boolean, connectDisabled: boole
  */
 function enablePublishButton(enabled: boolean): void {
 	const publishButton = document.getElementById('publish') as HTMLButtonElement;
+	const requestButton = document.getElementById('request-btn') as HTMLButtonElement;
 	if (publishButton) {
 		publishButton.disabled = !enabled;
+	}
+	if (requestButton) {
+		requestButton.disabled = !enabled;
 	}
 }
 
@@ -269,13 +273,45 @@ function setupUIHandlers(): void {
 	const publishButton = document.getElementById('publish');
 	if (publishButton) {
 		publishButton.onclick = (): void => {
-			if (natsConnection && stringCodec) {
-				const msg: string = 'Hello from browser at ' + new Date().toLocaleTimeString();
-				natsConnection.publish("demo.topic", stringCodec.encode(msg));
-			}
-		};
+							if (natsConnection && stringCodec) {
+					const msg: string = 'Hello from browser at ' + new Date().toLocaleTimeString();
+					natsConnection.publish("demo.topic", stringCodec.encode(msg));
+				}
+			};
+		}
+
+		// 请求按钮
+		const requestButton = document.getElementById('request-btn');
+		if (requestButton) {
+			requestButton.onclick = async (): Promise<void> => {
+				const subject = (document.getElementById('request-subject') as HTMLInputElement).value;
+				const payload = (document.getElementById('request-payload') as HTMLInputElement).value;
+				if (natsConnection && stringCodec) {
+					try {
+						// Display that we're sending the request
+						addMessageToUI(`Sending request to ${subject} with payload: ${payload}`);
+						
+						// Send the request and wait for a response
+						const response = await natsConnection.request(
+							subject,
+							stringCodec.encode(payload),
+							{ timeout: 2000 } // 2 second timeout
+						);
+						
+						// Display the response
+						const responseText = stringCodec.decode(response.data);
+						addMessageToUI(`Received response: ${responseText}`);
+					} catch (err) {
+						console.error('Request failed:', err);
+						addMessageToUI(`Request failed: ${err instanceof Error ? err.message : String(err)}`);
+					}
+				} else {
+					addMessageToUI('Not connected to NATS server');
+				}
+			};
+		}
 	}
-}
+
 
 /**
  * 将消息添加到UI显示列表
