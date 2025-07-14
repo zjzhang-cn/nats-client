@@ -1,57 +1,69 @@
 # NATS Client
 
-一个功能完整的NATS客户端演示项目，包含Go语言后端测试和TypeScript/JavaScript前端Web应用。
+一个功能完整的NATS客户端演示项目，包含Go语言后端测试和TypeScript前端Web应用。本项目展示了如何使用NATS消息系统的各种特性，包括JetStream、Key-Value存储、Object Store等。
 
 ## 🚀 特性
 
 ### Go 客户端 (后端)
-- ✅ NATS连接和基础消息传递
-- ✅ JetStream流处理
-- ✅ Key-Value存储
-- ✅ Object Store对象存储
-- ✅ 微服务支持
-- ✅ 队列订阅
-- ✅ 流发布和拉取订阅
-- ✅ HID (硬件接口设备) 集成
+- ✅ **NATS连接管理**: 支持代理连接和环境变量配置
+- ✅ **JetStream流处理**: 流发布、拉取订阅和队列订阅
+- ✅ **Key-Value存储**: KV存储的更新和监听
+- ✅ **Object Store**: 对象的上传和下载
+- ✅ **微服务支持**: 基于NATS的微服务架构
+- ✅ **队列订阅**: 负载均衡的消息处理
+- ✅ **错误处理**: 完整的错误处理和重连机制
+- ✅ **进度跟踪**: 文件传输进度监控
 
 ### Web 客户端 (前端)
 - ✨ **动态服务器配置**: 支持多个预设NATS服务器地址和自定义地址
-- ✨ **认证管理**: 可配置的Token认证
-- ✨ **实时连接**: WebSocket连接到NATS服务器
+- ✨ **Token认证**: 可配置的身份验证
+- ✨ **WebSocket连接**: 基于nats.ws的浏览器连接
 - ✨ **JetStream支持**: 流消息的发布和订阅
 - ✨ **普通消息**: 传统发布/订阅模式
-- ✨ **请求/响应**: 支持同步请求-响应模式
+- ✨ **请求/响应**: 同步请求-响应通信
 - ✨ **现代UI**: 响应式Web界面
+- ✨ **实时状态**: 连接状态和消息统计
 
 ## 📁 项目结构
 
 ```
 nats-client/
-├── go.mod                      # Go模块定义
-├── go.sum                      # Go依赖校验和
-├── *.go                        # Go源文件
-├── *_test.go                   # Go测试文件
-├── progress_reader.go          # 进度读取工具
-├── html/                       # Web前端应用
-│   ├── index.html             # 主页面
-│   ├── package.json           # npm包配置
-│   ├── vite.config.js         # Vite构建配置
+├── go.mod                      	# Go模块定义
+├── go.sum                      	# Go依赖校验和
+├── nats_connect.go             	# NATS连接工具
+├── progress_reader.go          	# 进度读取工具
+├── run.sh                      	# 测试运行脚本
+├── *_test.go                   	# 各功能测试文件
+│   ├── nats_test.go           		# 基础NATS测试
+│   ├── stream-pub_test.go     		# 流发布测试
+│   ├── stream-pull-sub_test.go 	# 流拉取订阅测试
+│   ├── stream-queue-sub_test.go 	# 流队列订阅测试
+│   ├── kv-update_test.go      		# KV更新测试
+│   ├── kv-watch_test.go       		# KV监听测试
+│   ├── object_put_test.go     		# 对象上传测试
+│   ├── object_get_test.go     		# 对象下载测试
+│   └── micro_test.go          		# 微服务测试
+├── html/                       	# Web前端应用
+│   ├── index.html             		# 主页面
+│   ├── package.json           		# npm包配置
+│   ├── vite.config.js         		# Vite构建配置
+│   ├── tsconfig.json          		# TypeScript配置
 │   ├── src/
-│   │   └── index.ts           # TypeScript主文件
-│   └── build/                 # 构建输出目录
-├── docs/                       # 项目文档
-└── CHANGELOG.md               # 变更日志
+│   │   └── index.ts           		# TypeScript主文件
+│   └── build/                 		# 构建输出目录
+└── .gitignore                 		# Git忽略文件
 ```
 
 ## 🛠️ 技术栈
 
 ### 后端 (Go)
-- **NATS.go**: NATS Go客户端库
-- **Zeroconf**: 服务发现
+- **Go 1.23.0**: 现代Go语言版本
+- **NATS.go v1.40.1**: 官方NATS Go客户端
+- **golang.org/x/net**: 网络和代理支持
 - **HTTP Proxy**: GE Healthcare内部代理库
 
 ### 前端 (TypeScript/JavaScript)
-- **NATS.ws**: NATS WebSocket客户端
+- **NATS.ws v1.30.3**: NATS WebSocket客户端
 - **Vite**: 现代前端构建工具
 - **TypeScript**: 类型安全的JavaScript
 
@@ -59,15 +71,23 @@ nats-client/
 
 ### 前置要求
 
-- Go 1.23.7+
+- Go 1.23.0+
 - Node.js 16+
 - 运行中的NATS服务器 (支持WebSocket)
+
+### 环境配置
+
+配置环境变量:
+```bash
+export NATS_URL="nats://username:password@your-nats-server:4222"
+export ALL_PROXY="socks5://proxy-server:port"  # 可选: 代理配置
+```
 
 ### 安装和运行
 
 #### 1. 克隆项目
 ```bash
-git clone <repository-url>
+git clone https://github.com/zjzhang-cn/nats-client.git
 cd nats-client
 ```
 
@@ -76,13 +96,18 @@ cd nats-client
 # 安装Go依赖
 go mod download
 
+# 使用脚本运行测试 (包含环境配置)
+./run.sh
+
 # 运行所有测试
 go test -v ./...
 
-# 运行特定测试
-go test -v -run TestNATSConnection
-go test -v -run TestJetStreamContext
-go test -v -run TestKvWatch
+# 运行特定测试模式
+./run.sh "TestNATS.*"           # NATS基础功能
+./run.sh "TestStream.*"         # JetStream流
+./run.sh "TestKv.*"             # Key-Value存储
+./run.sh "TestObject.*"         # Object Store
+./run.sh "TestMicro.*"          # 微服务
 ```
 
 #### 3. 启动Web应用
@@ -174,71 +199,150 @@ npm run debug
 npm run build
 ```
 
-## 📚 API文档
+## 📚 功能详解
 
-### Go客户端主要函数
+### Go测试模块
 
-- `TestNATSConnection()`: 测试基础NATS连接
-- `TestJetStreamContext()`: 测试JetStream上下文
-- `TestQueueSubscribe()`: 测试队列订阅
-- `TestStreamPullSub()`: 测试流拉取订阅
-- `TestKvWatch()`: 测试Key-Value监听
-- `TestObjectPut/Get()`: 测试对象存储
+#### 基础功能测试 (`nats_test.go`)
+- **连接测试**: 验证NATS服务器连接
+- **JetStream上下文**: 测试JetStream管理功能
+- **队列订阅**: 负载均衡的消息处理
+- **多消息处理**: 批量消息发送和接收
+- **错误处理**: 连接失败和重连机制
 
-### Web客户端主要函数
+#### 流处理测试
+- **`stream-pub_test.go`**: JetStream消息发布
+- **`stream-pull-sub_test.go`**: 拉取式消息订阅
+- **`stream-queue-sub_test.go`**: 队列模式的流订阅
 
-- `connectToNats()`: 连接NATS服务器
-- `getSelectedServerUrl()`: 获取选择的服务器地址  
-- `getAuthToken()`: 获取认证Token
-- `handleServerSelectChange()`: 处理服务器选择变化
+#### 存储测试
+- **`kv-update_test.go`**: Key-Value存储更新操作
+- **`kv-watch_test.go`**: Key-Value变化监听
+- **`object_put_test.go`**: 对象上传功能
+- **`object_get_test.go`**: 对象下载功能
 
-## 🔧 开发
+#### 微服务测试 (`micro_test.go`)
+- 基于NATS的微服务架构演示
 
-### 构建Web应用
+### Web客户端功能
+
+#### 核心特性
+- **动态服务器配置**: 支持运行时切换NATS服务器
+- **WebSocket连接**: 基于nats.ws的浏览器连接
+- **实时状态显示**: 连接状态和消息统计
+- **多种消息模式**: JetStream、普通订阅、请求响应
+
+#### 用户界面
+- **服务器选择**: 下拉菜单选择或自定义输入
+- **认证配置**: Token输入和管理
+- **消息面板**: 实时显示接收的消息
+- **操作按钮**: 连接控制和消息发送
+
+## 🔧 开发指南
+
+### 环境设置
+
+```bash
+# 设置Go代理 (中国用户)
+go env -w GOPROXY=https://goproxy.cn,direct
+
+# 安装依赖
+go mod tidy
+```
+
+### 测试开发
+
+```bash
+# 运行单个测试
+go test -v -run TestNATSConnection
+
+# 运行所有流相关测试
+go test -v -run "TestStream.*"
+
+# 运行测试并显示详细输出
+go test -v -run TestKvWatch -args -test.v
+```
+
+### Web开发
+
+```bash
+cd html
+
+# 开发模式 (热重载)
+npm start
+
+# 生产构建
+npm run build
+
+# 调试模式
+npm run debug
+```
+
+## 🚀 部署
+
+### 生产环境部署
+
+1. **构建Web应用**
 ```bash
 cd html
 npm run build
 ```
 
-构建输出位于 `html/build/` 目录。
+2. **配置服务器**
+- 确保NATS服务器支持WebSocket
+- 配置适当的CORS策略
+- 设置SSL证书 (生产环境推荐)
 
-### 添加新功能
+3. **部署静态文件**
+- 将`html/build/`目录内容部署到Web服务器
+- 配置适当的HTTP头部
 
-1. **Go后端**: 在相应的`*_test.go`文件中添加测试用例
-2. **Web前端**: 修改`html/src/index.ts`添加新功能
-3. **UI更新**: 修改`html/index.html`添加新的界面元素
+## � 性能优化
 
-## 📋 版本历史
+### Go客户端优化
+- 使用连接池管理多个NATS连接
+- 实现消息批处理减少网络开销
+- 配置适当的重连策略
 
-查看 [CHANGELOG.md](CHANGELOG.md) 了解详细的版本变更信息。
+### Web客户端优化
+- 启用消息压缩
+- 实现消息缓冲和批处理
+- 使用Service Worker缓存静态资源
 
-### 最新版本 v1.1.0 (2025-07-11)
-- ✨ 动态NATS服务器地址选择
-- ✨ 可配置认证Token
-- ✨ 改进的用户界面
-- 🔧 增强的连接逻辑和错误处理
+## 🔐 安全考虑
 
-## 🤝 贡献
+- **认证**: 使用强密码和Token
+- **加密**: 生产环境使用TLS连接
+- **授权**: 配置适当的NATS权限
+- **网络**: 在受信任的网络环境中部署
 
-1. Fork项目
-2. 创建功能分支 (`git checkout -b feature/新功能`)
-3. 提交更改 (`git commit -am '添加新功能'`)
-4. 推送到分支 (`git push origin feature/新功能`)
-5. 创建Pull Request
+## 📋 故障排除
 
-## 📄 许可证
+### 常见问题
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+1. **连接失败**
+   - 检查NATS服务器是否运行
+   - 验证网络连接和防火墙设置
+   - 确认WebSocket支持已启用
 
-## 📞 支持
+2. **认证错误**
+   - 检查Token格式和有效性
+   - 验证服务器认证配置
+
+3. **消息丢失**
+   - 检查JetStream配置
+   - 验证流的持久化设置
+
+## 📞 支持与反馈
 
 如有问题或建议，请：
-1. 查看 [文档](docs/)
-2. 创建 [Issue](../../issues)
-3. 联系项目维护者
+- 查看项目文档
+- 创建GitHub Issue
+- 联系项目维护者: zjzhang-cn
 
 ---
 
+**项目**: NATS Client Demo  
 **作者**: Zhenjiang Zhang  
-**版本**: 1.1.0  
-**更新时间**: 2025-07-11
+**仓库**: https://github.com/zjzhang-cn/nats-client  
+**最后更新**: 2025-07-14

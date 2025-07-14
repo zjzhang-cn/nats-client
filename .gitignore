@@ -5,3 +5,4 @@ html/node_modules/
 html/build/
 html/package-lock.json
 html/dist/
+run.sh
