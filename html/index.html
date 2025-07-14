@@ -40,6 +40,21 @@
 	<div style="margin-bottom: 15px;">
 		<button id="publish" disabled>发送消息</button>
 	</div>
+
+	<!-- 请求/响应 -->
+	<div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px;">
+		<h4>请求/响应 (Request/Reply)</h4>
+		<div style="margin-bottom: 10px;">
+			<label for="request-subject">主题:</label>
+			<input type="text" id="request-subject" value="User.login" style="margin-left: 10px; padding: 5px; width: 200px;">
+		</div>
+		<div style="margin-bottom: 10px;">
+			<label for="request-payload">内容:</label>
+			<input type="text" id="request-payload" value="来自浏览器的请求" style="margin-left: 10px; padding: 5px; width: 200px;">
+		</div>
+		<button id="request-btn" disabled>发送请求</button>
+	</div>
+
 	<ul id="messages"></ul>
 	<script type="module" src="src/index.ts"></script>
 </body>
