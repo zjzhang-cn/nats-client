@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>NATS.js Browser Demo</title>
+
+</head>
+
+<body>
+	<h2>NATS.js Browser Demo</h2>
+
+	<!-- NATS服务器地址选择 -->
+	<div style="margin-bottom: 15px;">
+		<label for="nats-server-select">NATS服务器地址:</label>
+		<select id="nats-server-select" style="margin-left: 10px; padding: 5px;">
+			<option value="ws://10.189.140.106:1081">ws://10.189.140.106:1081 (默认)</option>
+			<option value="ws://10.189.140.106:1082">ws://10.189.140.106:1082</option>
+			<option value="custom">自定义地址...</option>
+		</select>
+		<input type="text" id="custom-server-input" placeholder="输入自定义服务器地址"
+			style="margin-left: 10px; padding: 5px; display: none; width: 250px;">
+	</div>
+
+	<!-- Token配置 -->
+	<div style="margin-bottom: 15px;">
+		<label for="token-input">认证Token:</label>
+		<input type="text" id="token-input" value="" style="margin-left: 10px; padding: 5px; width: 200px;"
+			placeholder="输入认证token">
+	</div>
+
+	<!-- 连接控制 -->
+	<div style="margin-bottom: 15px;">
+		<button id="connect">连接到NATS</button>
+		<button id="disconnect" disabled>断开连接</button>
+		<span id="status" style="margin-left: 15px; font-weight: bold;">未连接</span>
+	</div>
+
+	<!-- 消息发布 -->
+	<div style="margin-bottom: 15px;">
+		<button id="publish" disabled>发送消息</button>
+	</div>
+	<ul id="messages"></ul>
+	<script type="module" src="src/index.ts"></script>
+</body>
+
+</html>

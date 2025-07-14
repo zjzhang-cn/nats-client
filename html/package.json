@@ -1,0 +1,25 @@
+{
+	"dependencies": {
+		"nats.ws": "^1.30.3"
+	},
+	"scripts": {
+		"build": "npx vite build",
+		"start": "npx vite",
+		"debug": "npx vite --debug"
+	},
+	"main": "index.js",
+	"types": "index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/username/your-package-name.git"
+	},
+	"author": "author name <author@email.com>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/username/your-package-name/issues"
+	},
+	"homepage": "https://github.com/username/your-package-name#readme",
+	"devDependencies": {
+		"vite": "^7.0.3"
+	}
+}
