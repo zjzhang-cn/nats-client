@@ -155,7 +155,7 @@ async function initJetStreamManager(js: nats.JetStreamClient, sc: nats.Codec<str
 					msg.ack();
 				};
 
-				addMessageToUI("SUBJECT:"+msg.subject+" MSG:"+sc.decode(msg.data) + " SEQ:" + msg.seq);
+				addMessageToUI("SUBJECT:" + msg.subject + " MSG:" + sc.decode(msg.data) + " SEQ:" + msg.seq);
 			}
 		});
 		console.log('已经打开 JetStream 消消费者');
@@ -273,44 +273,45 @@ function setupUIHandlers(): void {
 	const publishButton = document.getElementById('publish');
 	if (publishButton) {
 		publishButton.onclick = (): void => {
-							if (natsConnection && stringCodec) {
-					const msg: string = 'Hello from browser at ' + new Date().toLocaleTimeString();
-					natsConnection.publish("demo.topic", stringCodec.encode(msg));
-				}
-			};
-		}
-
-		// 请求按钮
-		const requestButton = document.getElementById('request-btn');
-		if (requestButton) {
-			requestButton.onclick = async (): Promise<void> => {
-				const subject = (document.getElementById('request-subject') as HTMLInputElement).value;
-				const payload = (document.getElementById('request-payload') as HTMLInputElement).value;
-				if (natsConnection && stringCodec) {
-					try {
-						// Display that we're sending the request
-						addMessageToUI(`Sending request to ${subject} with payload: ${payload}`);
-						
-						// Send the request and wait for a response
-						const response = await natsConnection.request(
-							subject,
-							stringCodec.encode(payload),
-							{ timeout: 2000 } // 2 second timeout
-						);
-						
-						// Display the response
-						const responseText = stringCodec.decode(response.data);
-						addMessageToUI(`Received response: ${responseText}`);
-					} catch (err) {
-						console.error('Request failed:', err);
-						addMessageToUI(`Request failed: ${err instanceof Error ? err.message : String(err)}`);
-					}
-				} else {
-					addMessageToUI('Not connected to NATS server');
-				}
-			};
-		}
+			if (natsConnection && stringCodec) {
+				const payload = (document.getElementById('publish-payload') as HTMLInputElement).value;
+				const msg: string = `${new Date().toLocaleTimeString()} - ${payload}`;
+				natsConnection.publish("demo.topic", stringCodec.encode(msg));
+			}
+		};
 	}
+
+	// 请求按钮
+	const requestButton = document.getElementById('request-btn');
+	if (requestButton) {
+		requestButton.onclick = async (): Promise<void> => {
+			const subject = (document.getElementById('request-subject') as HTMLInputElement).value;
+			const payload = (document.getElementById('request-payload') as HTMLInputElement).value;
+			if (natsConnection && stringCodec) {
+				try {
+					// Display that we're sending the request
+					addMessageToUI(`Sending request to ${subject} with payload: ${payload}`);
+
+					// Send the request and wait for a response
+					const response = await natsConnection.request(
+						subject,
+						stringCodec.encode(payload),
+						{ timeout: 2000 } // 2 second timeout
+					);
+
+					// Display the response
+					const responseText = stringCodec.decode(response.data);
+					addMessageToUI(`Received response: ${responseText}`);
+				} catch (err) {
+					console.error('Request failed:', err);
+					addMessageToUI(`Request failed: ${err instanceof Error ? err.message : String(err)}`);
+				}
+			} else {
+				addMessageToUI('Not connected to NATS server');
+			}
+		};
+	}
+}
 
 
 /**
@@ -349,13 +350,13 @@ function setupCleanup(nc: NatsConnection): void {
 function getSelectedServerUrl(): string | null {
 	const selectElement = document.getElementById('nats-server-select') as HTMLSelectElement;
 	const customInputElement = document.getElementById('custom-server-input') as HTMLInputElement;
-	
+
 	if (!selectElement) {
 		return null;
 	}
-	
+
 	const selectedValue = selectElement.value;
-	
+
 	if (selectedValue === 'custom') {
 		const customUrl = customInputElement?.value?.trim();
 		if (!customUrl) {
@@ -367,7 +368,7 @@ function getSelectedServerUrl(): string | null {
 		}
 		return customUrl;
 	}
-	
+
 	return selectedValue;
 }
 
@@ -386,11 +387,11 @@ function getAuthToken(): string {
 function handleServerSelectChange(): void {
 	const selectElement = document.getElementById('nats-server-select') as HTMLSelectElement;
 	const customInputElement = document.getElementById('custom-server-input') as HTMLInputElement;
-	
+
 	if (!selectElement || !customInputElement) {
 		return;
 	}
-	
+
 	if (selectElement.value === 'custom') {
 		customInputElement.style.display = 'inline-block';
 		customInputElement.focus();
