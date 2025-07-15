@@ -22,7 +22,7 @@ func TestKvUpdate(t *testing.T) {
 	// 	log.Printf("Received a message on subject %s: %s", msg.Subject, string(msg.Data))
 	// })
 
-	ctx := context.WithoutCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 	// js, err := jetstream.New(nc)
 	js, err := jetstream.NewWithDomain(nc, "hub")
 	if err != nil {
@@ -42,7 +42,7 @@ func TestKvUpdate(t *testing.T) {
 	}
 	log.Printf("Created KeyValue Bucket: %s", bucket)
 	//删除 Bucket
-	defer js.DeleteKeyValue(ctx, bucket)
+	defer js.DeleteKeyValue(ctx, bucket) // Consider calling cancel() before this to release resources.
 	revision, err := kv.Create(ctx, "key1", []byte("Hello, NATS! "))
 	if err != nil {
 		log.Printf("Error Creating KeyValue Entry: %v", err)
@@ -72,4 +72,5 @@ func TestKvUpdate(t *testing.T) {
 	}
 	kv.Purge(ctx, "key1")
 
+	cancel() // Ensure resources are released when the test completes.
 }
